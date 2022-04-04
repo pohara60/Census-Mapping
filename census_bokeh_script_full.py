@@ -3,7 +3,6 @@ from bokeh.models.widgets import RadioButtonGroup
 import census_read_data as crd
 import census_read_geopandas as crg
 import pandas as pd
-import json
 from bokeh.models import GeoJSONDataSource
 from bokeh.models import LinearColorMapper, ColorBar, PrintfTickFormatter
 from bokeh.models import HoverTool
@@ -71,6 +70,7 @@ london_wards_data_gdf = None    # London Ward data
 
 
 def update_table(attr, old, new):
+    # Callback gets table data, invokes categories callback
     global table_name, categories, tdf, df, london_lads_data_gdf, london_wards_data_gdf
 
     if old is not None and new == old:
@@ -96,6 +96,7 @@ def update_table(attr, old, new):
 
 
 def update_categories(attr, old, new):
+    # Callback updates categories and collects category values, invokes graph callback
     global all_categories, query_string
 
     # Update category widgets
@@ -138,12 +139,12 @@ def update_categories(attr, old, new):
 
 
 def update_graph(attr, old, new):
+    # Callback recreates map when granularity or local_authority are changed
 
-    # If all categories are specified then get data
     if not all_categories:
+        # Just show widgets
         layout = widgets
     else:
-
         trow = tdf.query(query_string)
         datacol = table_name + trow.iloc[0, -1]
         lad_max_value = london_lads_data_gdf[datacol].max()
@@ -170,9 +171,7 @@ def update_graph(attr, old, new):
                 title = datacol + " by Ward for " + local_authority_name
 
         # Input GeoJSON source that contains features for plotting
-        gdf_json = json.loads(gdf.to_json())
-        json_data = json.dumps(gdf_json)
-        geosource = GeoJSONDataSource(geojson=json_data)
+        geosource = GeoJSONDataSource(geojson=gdf.to_json())
 
         # Create color bar
         color_mapper = LinearColorMapper(

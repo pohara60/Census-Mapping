@@ -42,9 +42,7 @@ max_value = gdf[datacol].max()
 title = datacol + " by Local Authority"
 
 # Input GeoJSON source that contains features for plotting
-gdf_json = json.loads(gdf.to_json())
-json_data = json.dumps(gdf_json)
-geosource = GeoJSONDataSource(geojson=json_data)
+geosource = GeoJSONDataSource(geojson=gdf.to_json())
 
 # Create color bar
 color_mapper = LinearColorMapper(palette='Viridis256', low=0, high=max_value)

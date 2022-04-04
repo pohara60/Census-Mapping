@@ -3,12 +3,10 @@ from bokeh.models.widgets import RadioButtonGroup
 import census_read_data as crd
 import census_read_geopandas as crg
 import pandas as pd
-import json
 from bokeh.models import GeoJSONDataSource
 from bokeh.models import LinearColorMapper, ColorBar, PrintfTickFormatter
 from bokeh.models import HoverTool
 from bokeh.plotting import figure, curdoc
-from bokeh.io import show
 from bokeh.layouts import column
 
 # Get Census Merged Ward and Local Authority Data
@@ -64,6 +62,7 @@ local_authority_widget = Select(title='Wards for Local Authority',
 
 
 def update_graph(attr, old, new):
+    # Callback recreates map when granularity or local_authority are changed
     granularity = granularities[granularity_widget.active]
     local_authority = local_authority_widget.value
 
@@ -84,9 +83,7 @@ def update_graph(attr, old, new):
             title = datacol + " by Ward for " + local_authority_name
 
     # Input GeoJSON source that contains features for plotting
-    gdf_json = json.loads(gdf.to_json())
-    json_data = json.dumps(gdf_json)
-    geosource = GeoJSONDataSource(geojson=json_data)
+    geosource = GeoJSONDataSource(geojson=gdf.to_json())
 
     # Create color bar
     color_mapper = LinearColorMapper(
