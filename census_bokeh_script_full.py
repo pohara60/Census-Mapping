@@ -24,11 +24,6 @@ london_lads_gdf = crg.read_london_lad_geopandas()
 index = crd.read_index()
 table_names = crd.get_table_names(index)
 
-# Get table names
-index = crd.read_index()
-table_names = crd.get_table_names(index)
-
-
 # Bokeh
 
 # Create Widgets

@@ -136,7 +136,7 @@ def read_geography():
 
 
 def get_table_names(index):
-    names = [(index.loc[i, 'Table Number'], index.loc[i, 'Table Title'])
+    names = [(index.loc[i, 'Table Number'], index.loc[i, 'Table Title'].strip())
              for i in range(index.shape[0])]
     return names
 
